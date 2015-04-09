@@ -62,17 +62,22 @@ public class IvyRun {
         this(Arrays.asList(repos));
     }
 
-    public void run(String organization, String name, String rev, String mainClass, String... args) throws Exception {
-        List<String> a = new ArrayList<>(8 + args.length);
+    private void run(String mainClass, String[] args, String... deps) throws Exception {
+        List<String> a = new ArrayList<>(4 + args.length + deps.length);
         a.add("-settings");
         a.add(setting.toFile().getPath());
-        a.add("-dependency");
-        a.add(organization);
-        a.add(name);
-        a.add(rev);
+        a.addAll(Arrays.asList(deps));
         a.add("-main");
         a.add(mainClass);
         a.addAll(Arrays.asList(args));
         org.apache.ivy.Main.main(a.toArray(new String[0]));
+    }
+
+    public void run(String organization, String name, String rev, String mainClass, String... args) throws Exception {
+        run(mainClass, args, "-dependency", organization, name, rev);
+    }
+
+    public void run(Path ivyfile, String mainClass, String... args) throws Exception {
+        run(mainClass, args, "-ivy", ivyfile.toFile().getPath());
     }
 }

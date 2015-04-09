@@ -1,0 +1,7 @@
+<ivy-module version="2.0">
+    <info organisation="myorg" module="mymodule"></info>
+    <dependencies>
+        <dependency org="org.clojure" name="clojure" rev="1.6.0"/>
+        <dependency org="org.clojure" name="tools.nrepl" rev="0.2.10"/>
+    </dependencies>
+</ivy-module>
