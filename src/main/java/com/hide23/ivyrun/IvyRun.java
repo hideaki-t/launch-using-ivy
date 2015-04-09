@@ -23,10 +23,11 @@ public class IvyRun {
      * @param repos repositories. will be used as resolvers in a chain resolver.
      *              if it is empty, default BintrayResolver will be used
      */
-    public IvyRun(List<URI> repos) {
+    public IvyRun(List<URI> repos) throws IOException {
         try {
-            setting = Files.createTempFile("", "");
+            setting = Files.createTempFile("ir_", ".xml");
             try (Writer w = Files.newBufferedWriter(setting, StandardCharsets.UTF_8)) {
+                setting.toFile().deleteOnExit();
                 XMLStreamWriter x = XMLOutputFactory.newInstance().createXMLStreamWriter(w);
                 x.writeStartDocument();
                 x.writeStartElement("ivysettings");
@@ -53,12 +54,12 @@ public class IvyRun {
                 x.writeEndElement();
                 x.writeEndDocument();
             }
-        } catch (IOException | XMLStreamException e) {
-            e.printStackTrace();
+        } catch (XMLStreamException e) {
+            throw new IOException(e);
         }
     }
 
-    public IvyRun(URI... repos) {
+    public IvyRun(URI... repos) throws IOException {
         this(Arrays.asList(repos));
     }
 
